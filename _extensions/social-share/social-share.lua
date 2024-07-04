@@ -11,13 +11,18 @@ end
 
 function Meta(m)
     ensureHtmlDeps()
+
+    -- Check if m.share exists, if not, return early
+    if not m.share then
+        return
+    end
+
     local share_start = '<div class= "page-columns page-rows-contents page-layout-article"><div class="social-share">'
     if m.share.divclass then
         local divclass = pandoc.utils.stringify(m.share.divclass)
         share_start = '<div class= "' .. divclass .. '"><div class="social-share">'
     end
     local share_end = '</div></div>'
-    
     local share_text = share_start
 
     -- Default to empty string for share_url, it will be set by JavaScript if not provided
@@ -25,8 +30,8 @@ function Meta(m)
     if m.share.permalink then
         share_url = pandoc.utils.stringify(m.share.permalink)
     end
-    
-    local post_title = m.title
+
+    local post_title = pandoc.utils.stringify(m.title)
     if m.share.description then
         post_title = pandoc.utils.stringify(m.share.description)
     end
@@ -70,7 +75,11 @@ function Meta(m)
             var links = document.querySelectorAll('.social-share a');
             links.forEach(function(link) {
                 var href = link.getAttribute('href');
-                link.setAttribute('href', href.replace('url=', 'url=' + encodeURIComponent(currentUrl)));
+                if (link.classList.contains('email')) {
+                    link.setAttribute('href', 'mailto:?subject=]] .. post_title .. [[&body=Check out this link: ' + encodeURIComponent(currentUrl));
+                } else {
+                    link.setAttribute('href', href.replace('url=', 'url=' + encodeURIComponent(currentUrl)));
+                }
             });
         }
     });
