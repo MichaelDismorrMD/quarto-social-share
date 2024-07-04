@@ -1,6 +1,9 @@
 # Add Share buttons to Quarto HTML Documents
 
+This is a fork from the original extension by schochastics.
+This fork makes the share link default to the current page with the help of a javascript, so you don't have to specify a new permalink for all your posts.
 This extension allows to add buttons to share articles on various social media platforms.
+
 
 ## Installing
 
